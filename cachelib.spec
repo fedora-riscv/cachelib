@@ -6,8 +6,9 @@
 %bcond_with tests
 
 %global forgeurl https://github.com/facebook/CacheLib
-%global commit e3703aade03d359d290936b334ab81ca4a856b41
-%global date 20211129
+%global commit c4904ef2524f396eb432392f8308a69dda926bd8
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+%global date 20211220
 %forgemeta
 
 # see cachelib/allocator/CacheVersion.h's kCachelibVersion
@@ -16,7 +17,9 @@
 
 Name:           cachelib
 Version:        %{major_ver}
-Release:        %autorelease
+# using -s seems to add the snapinfo twice in the generated filename
+# https://pagure.io/fedora-infra/rpmautospec/issue/240
+Release:        %autorelease -e %{date}git%{shortcommit}
 Summary:        Pluggable caching engine for scale high performance cache services
 
 License:        ASL 2.0
@@ -33,13 +36,16 @@ Patch2:         %{name}-versioned_so.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=1892151
 ExcludeArch:    s390x
 # does not compile cleanly on 32-bit arches
-# TODO: file excludearch blocker
+# https://bugzilla.redhat.com/show_bug.cgi?id=2036124
 %if 0%{?el8}
 ExcludeArch:    %{arm}
 %else
 ExcludeArch:    %{arm32}
 %endif
 ExcludeArch:    %{ix86}
+# build failure on aarch64
+# https://bugzilla.redhat.com/show_bug.cgi?id=2036121
+ExcludeArch:    %{arm64}
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
