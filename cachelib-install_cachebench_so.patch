@@ -1,0 +1,19 @@
+diff -ruN CacheLib-e3703aade03d359d290936b334ab81ca4a856b41/cachelib/cachebench/CMakeLists.txt CacheLib-install_cachebench_so/cachelib/cachebench/CMakeLists.txt
+--- CacheLib-e3703aade03d359d290936b334ab81ca4a856b41/cachelib/cachebench/CMakeLists.txt	2021-11-29 13:01:49.000000000 -0800
++++ CacheLib-install_cachebench_so/cachelib/cachebench/CMakeLists.txt	2021-12-22 11:23:22.159017377 -0800
+@@ -49,6 +49,15 @@
+ )
+ 
+ 
++if (BUILD_SHARED_LIBS)
++  install(
++    TARGETS cachelib_cachebench
++    EXPORT cachelib-exports
++    DESTINATION ${LIB_INSTALL_DIR}
++  )
++endif ()
++
++
+ if (BUILD_TESTS)
+   add_library (cachebench_test_support INTERFACE )
+   target_link_libraries (cachebench_test_support INTERFACE
