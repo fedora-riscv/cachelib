@@ -31,6 +31,8 @@ Patch0:         %{name}-ld_gtest.patch
 Patch1:         %{name}-install_cachebench_so.patch
 # and version them
 Patch2:         %{name}-versioned_so.patch
+# needed on EL8; its gtest does not come with cmake files
+Patch3:         %{name}-find-gtest.patch
 
 # Folly is known not to work on big-endian CPUs
 # https://bugzilla.redhat.com/show_bug.cgi?id=1892151
@@ -45,7 +47,7 @@ ExcludeArch:    %{arm32}
 ExcludeArch:    %{ix86}
 # build failure on aarch64
 # https://bugzilla.redhat.com/show_bug.cgi?id=2036121
-ExcludeArch:    %{arm64}
+ExcludeArch:    aarch64
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -86,7 +88,13 @@ applications that use %{name}.
 
 
 %prep
-%forgeautosetup -p1
+%forgesetup
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%if 0%{?el8}
+%patch3 -p1
+%endif
 
 
 %build
