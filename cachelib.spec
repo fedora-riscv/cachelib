@@ -6,9 +6,12 @@
 %bcond_with tests
 
 %global forgeurl https://github.com/facebook/CacheLib
-%global commit c4904ef2524f396eb432392f8308a69dda926bd8
+%global commit 03dcb9bbddb977b5ec6e9ba6c5b1a53cac521f85
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
-%global date 20211220
+%global date 20220228
+# disable forge macro snapinfo generation
+# https://pagure.io/fedora-infra/rpmautospec/issue/240
+%global distprefix %{nil}
 %forgemeta
 
 # see cachelib/allocator/CacheVersion.h's kCachelibVersion
@@ -16,23 +19,18 @@
 
 
 Name:           cachelib
-Version:        %{major_ver}
-# using -s seems to add the snapinfo twice in the generated filename
-# https://pagure.io/fedora-infra/rpmautospec/issue/240
-Release:        %autorelease -e %{date}git%{shortcommit}
+Version:        %{major_ver}^%{date}git%{shortcommit}
+Release:        %autorelease
 Summary:        Pluggable caching engine for scale high performance cache services
 
 License:        ASL 2.0
 URL:            %forgeurl
 Source0:        %forgesource
-# move TestUtils from cachelib_common to common_test_support to avoid ld issues
-Patch0:         %{name}-ld_gtest.patch
-# need to install cachelib_cachebench when building shared libs
-Patch1:         %{name}-install_cachebench_so.patch
-# and version them
-Patch2:         %{name}-versioned_so.patch
+# cachelib builds broken by recent thrift codemod
+Patch0:         %{name}-undo-thrift-codemod.patch
 # needed on EL8; its gtest does not come with cmake files
-Patch3:         %{name}-find-gtest.patch
+Patch1:         %{name}-find-gtest.patch
+
 
 # Folly is known not to work on big-endian CPUs
 # https://bugzilla.redhat.com/show_bug.cgi?id=1892151
@@ -90,10 +88,8 @@ applications that use %{name}.
 %prep
 %forgesetup
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 %if 0%{?el8}
-%patch3 -p1
+%patch1 -p1
 %endif
 
 
