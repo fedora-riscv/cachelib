@@ -1,3 +1,14 @@
+%if 0%{?fedora} >= 36
+# Folly is compiled with Clang
+%bcond_without toolchain_clang
+%else
+%bcond_with toolchain_clang
+%endif
+
+%if %{with toolchain_clang}
+%global toolchain clang
+%endif
+
 # Tests currently fail with
 # /builddir/build/BUILD/CacheLib-e3703aade03d359d290936b334ab81ca4a856b41/cachelib/compact_cache/tests/CCacheTests.cpp:159:1:   required from here
 # /builddir/build/BUILD/CacheLib-e3703aade03d359d290936b334ab81ca4a856b41/cachelib/../cachelib/compact_cache/CCacheFixedLruBucket.h:277:11: internal compiler error: Floating point exception
@@ -35,6 +46,10 @@ Patch1:         %{name}-find-gtest.patch
 # Folly is known not to work on big-endian CPUs
 # https://bugzilla.redhat.com/show_bug.cgi?id=1892151
 ExcludeArch:    s390x
+%if 0%{?fedora} >= 36
+# fmt code breaks: https://bugzilla.redhat.com/show_bug.cgi?id=2061022
+ExcludeArch:    ppc64le
+%endif
 # does not compile cleanly on 32-bit arches
 # https://bugzilla.redhat.com/show_bug.cgi?id=2036124
 %if 0%{?el8}
@@ -48,7 +63,11 @@ ExcludeArch:    %{ix86}
 ExcludeArch:    aarch64
 
 BuildRequires:  cmake
+%if %{with toolchain_clang}
+BuildRequires:  clang
+%else
 BuildRequires:  gcc-c++
+%endif
 BuildRequires:  fbthrift-devel
 BuildRequires:  fizz-devel
 BuildRequires:  folly-devel
