@@ -7,9 +7,16 @@
 
 %if %{with toolchain_clang}
 %global toolchain clang
+%bcond_without build_tests
+%else
+# failure when compiled with GCC 11:
+# /builddir/build/BUILD/CacheLib-bd22b0eb79f7e2326f77a22c278c48e454882291/cachelib/compact_cache/tests/CCacheTests.cpp:114:1:   required from here
+# /builddir/build/BUILD/CacheLib-bd22b0eb79f7e2326f77a22c278c48e454882291/cachelib/../cachelib/compact_cache/CCacheFixedLruBucket.h:277:11: internal compiler error: Floating point exception
+#   277 |     memcpy(destPtr, srcPtr, sizeof(T));
+#       |     ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%bcond_with build_tests
 %endif
 
-%bcond_without build_tests
 # tests not discoverable by ctest yet
 %bcond_with check
 
