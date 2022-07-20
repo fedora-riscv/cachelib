@@ -1,4 +1,4 @@
-%if 0%{?fedora} >= 36
+%if 0%{?fedora} == 36
 # Folly is compiled with Clang
 %bcond_without toolchain_clang
 %else
@@ -34,13 +34,18 @@ License:        ASL 2.0
 URL:            %forgeurl
 Source0:        %forgesource
 Patch0:         %{name}-fix_test_linking.patch
+# Workaround for gcc issue:
+# https://bugzilla.redhat.com/show_bug.cgi?id=2108665
+Patch1:         %{name}-workaround-gcc12-bz2108665.patch
+# https://github.com/facebook/CacheLib/commit/2114d3fe8b60992e4b98c2e4e07761649aa47d89
+Patch2:         %{name}-avoid-bind-packed-buffer.patch
 # needed on EL8; its gtest does not come with cmake files
 Patch100:       %{name}-find-gtest.patch
 
 # Folly is known not to work on big-endian CPUs
 # https://bugzilla.redhat.com/show_bug.cgi?id=1892151
 ExcludeArch:    s390x
-%if 0%{?fedora} >= 36
+%if 0%{?fedora} == 36
 # fmt code breaks: https://bugzilla.redhat.com/show_bug.cgi?id=2061022
 ExcludeArch:    ppc64le
 %endif
@@ -98,6 +103,8 @@ applications that use %{name}.
 %prep
 %forgesetup
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 %if 0%{?el8}
 %patch100 -p1
 %endif

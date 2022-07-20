@@ -1,0 +1,11 @@
+--- CacheLib-bd22b0eb79f7e2326f77a22c278c48e454882291/cachelib/compact_cache/CCacheFixedLruBucket.h.orig	2022-03-15 02:49:38.000000000 +0900
++++ CacheLib-bd22b0eb79f7e2326f77a22c278c48e454882291/cachelib/compact_cache/CCacheFixedLruBucket.h	2022-07-20 02:03:03.028073719 +0900
+@@ -274,7 +274,7 @@ struct FixedLruBucket {
+   static void copyValue(T* destPtr, const T* srcPtr) {
+     XDCHECK(destPtr != nullptr);
+     XDCHECK(srcPtr != nullptr);
+-    memcpy(destPtr, srcPtr, sizeof(T));
++    memcpy(reinterpret_cast<void *>(destPtr), reinterpret_cast<const void *>(srcPtr), sizeof(T));
+   }
+ };
+ } // namespace cachelib

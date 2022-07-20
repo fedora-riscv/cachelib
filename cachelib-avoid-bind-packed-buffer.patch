@@ -1,0 +1,39 @@
+From 2114d3fe8b60992e4b98c2e4e07761649aa47d89 Mon Sep 17 00:00:00 2001
+From: Jimmy Lu <beyondsora@fb.com>
+Date: Tue, 28 Jun 2022 15:48:00 -0700
+Subject: [PATCH] DO NOT COMMIT YET - Do not "pack" FixedArraySize elements
+
+Summary:
+DO NOT COMMIT YET.
+Needs to be discussed.
+
+Remove the FOLLY_PACK_ATTR to avoid packing the FixedArraySize elements.
+This avoids the C++ error "cannot bind unpacked field".
+
+C.f. D24538466 (https://github.com/facebook/CacheLib/commit/ab1f75cbdcc1c40a48e0f6eaf76488ce482cbd2a) .
+
+Reviewed By: haowu14
+
+Differential Revision: D35907647
+
+fbshipit-source-id: 7e3ed0a9bc78c1eb1818a2e725361a5c2fceaca1
+---
+ cachelib/datatype/FixedSizeArray.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/cachelib/datatype/FixedSizeArray.h b/cachelib/datatype/FixedSizeArray.h
+index 6d6a1fa5b..9155ad60e 100644
+--- a/cachelib/datatype/FixedSizeArray.h
++++ b/cachelib/datatype/FixedSizeArray.h
+@@ -26,8 +26,10 @@ namespace cachelib {
+ 
+ namespace detail {
+ // @param T must be a POD like type
++// Note that packing is not guaranteed with this data structure. User
++// of FixedSizeArray must ensure their type is packed if they need it.
+ template <typename T>
+-class FOLLY_PACK_ATTR FixedSizeArrayLayout {
++class FixedSizeArrayLayout {
+  public:
+   // Compute the storage required for the number of elements
+   static uint32_t computeStorageSize(uint32_t numElements) {
