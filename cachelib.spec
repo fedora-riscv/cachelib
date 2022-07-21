@@ -1,9 +1,4 @@
-%if 0%{?fedora} == 36
-# Folly is compiled with Clang
-%bcond_without toolchain_clang
-%else
 %bcond_with toolchain_clang
-%endif
 
 %if %{with toolchain_clang}
 %global toolchain clang
@@ -42,21 +37,7 @@ Patch2:         %{name}-avoid-bind-packed-buffer.patch
 # needed on EL8; its gtest does not come with cmake files
 Patch100:       %{name}-find-gtest.patch
 
-# Folly is known not to work on big-endian CPUs
-# https://bugzilla.redhat.com/show_bug.cgi?id=1892151
-ExcludeArch:    s390x
-%if 0%{?fedora} == 36
-# fmt code breaks: https://bugzilla.redhat.com/show_bug.cgi?id=2061022
-ExcludeArch:    ppc64le
-%endif
-# does not compile cleanly on 32-bit arches
-# https://bugzilla.redhat.com/show_bug.cgi?id=2036124
-%if 0%{?el8}
-ExcludeArch:    %{arm}
-%else
-ExcludeArch:    %{arm32}
-%endif
-ExcludeArch:    %{ix86}
+ExclusiveArch:  x86_64 aarch64 ppc64le
 
 BuildRequires:  cmake
 %if %{with toolchain_clang}
