@@ -31,6 +31,8 @@ Source0:        %forgesource
 Patch0:         %{name}-fix_test_linking.patch
 # Workaround for gcc issue:
 # https://bugzilla.redhat.com/show_bug.cgi?id=2108665
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105634
+# Fixed in gcc-12.1.1-4
 Patch1:         %{name}-workaround-gcc12-bz2108665.patch
 # https://github.com/facebook/CacheLib/commit/2114d3fe8b60992e4b98c2e4e07761649aa47d89
 Patch2:         %{name}-avoid-bind-packed-buffer.patch
@@ -84,7 +86,9 @@ applications that use %{name}.
 %prep
 %forgesetup
 %patch0 -p1
+%if 0%{?fedora} <= 37
 %patch1 -p1
+%endif
 %patch2 -p1
 %if 0%{?el8}
 %patch100 -p1
