@@ -1,0 +1,29 @@
+From 39f1f92f6f039e7b1a161b5302fd9b8952fc97f8 Mon Sep 17 00:00:00 2001
+From: Dan Melnic <dmm@meta.com>
+Date: Thu, 6 Jul 2023 17:42:20 -0700
+Subject: [PATCH] Fix for atomic formatting
+
+Summary: static assertion failed: Cannot format an argument
+
+Reviewed By: vitaut
+
+Differential Revision: D47277406
+
+fbshipit-source-id: 4e784997d72860a9447cc069c72f0e4bf92af7e0
+---
+ cachelib/navy/admission_policy/DynamicRandomAP.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cachelib/navy/admission_policy/DynamicRandomAP.cpp b/cachelib/navy/admission_policy/DynamicRandomAP.cpp
+index 3a8a1aa09..d8238415b 100644
+--- a/cachelib/navy/admission_policy/DynamicRandomAP.cpp
++++ b/cachelib/navy/admission_policy/DynamicRandomAP.cpp
+@@ -189,7 +189,7 @@ void DynamicRandomAP::updateThrottleParamsLocked(std::chrono::seconds curTime) {
+     XLOGF(INFO,
+           "max write rate {} will be used because target current write rate {} "
+           "exceeds it.",
+-          maxRate_, curTargetRate);
++          maxRate_.load(), curTargetRate);
+     curTargetRate = maxRate_;
+   }
+   writeStats_.curTargetRate = curTargetRate;
