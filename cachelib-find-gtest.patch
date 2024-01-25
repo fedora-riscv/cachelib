@@ -1,6 +1,6 @@
 diff '--color=auto' -ruN CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8/cachelib/cmake/FindGTest.cmake CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8-find-gtest/cachelib/cmake/FindGTest.cmake
---- CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8/cachelib/cmake/FindGTest.cmake	1969-12-31 16:00:00.000000000 -0800
-+++ CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8-find-gtest/cachelib/cmake/FindGTest.cmake	2022-02-24 20:08:51.087790319 -0800
+--- /dev/null
++++ b/cachelib/cmake/FindGTest.cmake
 @@ -0,0 +1,54 @@
 +# Copyright (c) Facebook, Inc. and its affiliates.
 +#
@@ -56,10 +56,9 @@ diff '--color=auto' -ruN CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8/cache
 +if(GTEST_FOUND AND NOT GTEST_FIND_QUIETLY)
 +    message(STATUS "GTEST: ${GTEST_INCLUDE_DIRS}")
 +endif()
-diff '--color=auto' -ruN CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8/cachelib/CMakeLists.txt CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8-find-gtest/cachelib/CMakeLists.txt
---- CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8/cachelib/CMakeLists.txt	2021-12-20 07:22:18.000000000 -0800
-+++ CacheLib-c4904ef2524f396eb432392f8308a69dda926bd8-find-gtest/cachelib/CMakeLists.txt	2022-02-24 20:12:39.078602510 -0800
-@@ -93,7 +93,7 @@
+--- a/cachelib/CMakeLists.txt
++++ b/cachelib/CMakeLists.txt
+@@ -97,7 +97,7 @@ find_package(Boost REQUIRED COMPONENTS
               system filesystem regex context program_options thread)
  find_package(Gflags REQUIRED)
  find_package(Glog REQUIRED)
