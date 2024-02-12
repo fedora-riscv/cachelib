@@ -21,7 +21,7 @@
 
 Name:           cachelib
 Version:        %{major_ver}^%{date}
-Release:        %autorelease
+Release:        %autorelease -e rv64
 Summary:        Pluggable caching engine for scale high performance cache services
 
 License:        Apache-2.0
@@ -33,7 +33,7 @@ Patch100:       %{name}-find-gtest.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=2108665
 Patch200:         %{name}-workaround-gcc-epel9-x86_64-bz2108665.patch
 
-ExclusiveArch:  x86_64 aarch64 ppc64le
+ExclusiveArch:  x86_64 aarch64 ppc64le riscv64
 
 BuildRequires:  cmake
 %if %{with toolchain_clang}
